@@ -22,7 +22,7 @@ const render = () =>
 
 const start = async () => {
   const newPlaylists = await playlistsStorage.fill(examplePlaylists)
-  const newTracks = await tracksStorage.fill(exampleTracks)
+  const newTracks = await tracksStorage.fill(exampleTracks) 
 
   render()
 }

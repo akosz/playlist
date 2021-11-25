@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { playlistsStorage } from '../../api/PlaylistsStorage'
 import { tracksStorage } from '../../api/TrackStorage'
-import { examplePlaylists } from '../../domain/playlist'
 
 const useTracksService = () => {
     //Adatok

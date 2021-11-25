@@ -1,13 +1,14 @@
 import React, { useContext, useState } from 'react'
 import { exampleTracks } from "../../domain/track";
 import { PlaylistsContext } from '../state/PlaylistsService';
+import { TracksContext } from '../state/TracksService';
 import { Track } from './Track';
 import { TrackForm } from './TrackForm';
 
 export function Tracks() {
     const [open, setOpen] = useState(false)
-    const [tracks, setTracks] = useState(exampleTracks)
-    const [editTrack, setEditTrack] = useState({})
+    const {tracks, addNewTrack, editTrack, deleteTrack } = useContext(TracksContext)
+    const [editedTrack, setEditedTrack] = useState({})
 
     const { deleteTrackFromMultiplePlaylist } = useContext(PlaylistsContext)
 
@@ -16,23 +17,26 @@ export function Tracks() {
 
     const handleTrack = track => {
         if(!track.id)
-            setTracks([...tracks, {...track, id: Date.now().toString()}])
+            //setTracks([...tracks, {...track, id: Date.now().toString()}])
+            addNewTrack(track)
         else
-            setTracks(tracks.map(tr => tr.id != track.id ? tr : track))
+            //setTracks(tracks.map(tr => tr.id != track.id ? tr : track))
+            editTrack(track)
     }
 
     const handleNew = () =>{
-        setEditTrack({})
+        setEditedTrack({})
         handleOpen()
     }
 
     const handleEdit = track => {
-        setEditTrack(track)
+        setEditedTrack(track)
         handleOpen()
     }
 
     const handleDelete = track => {
-        setTracks(tracks.filter(tr => tr.id !== track.id))
+        //setTracks(tracks.filter(tr => tr.id !== track.id))
+        deleteTrack(track)
         deleteTrackFromMultiplePlaylist(track.id)
     }
 
@@ -61,7 +65,7 @@ export function Tracks() {
                     </tbody>
                 </table>
             </div>
-            <TrackForm open={open} onClose={handleClose} onSubmit={handleTrack} track={editTrack}/>
+            <TrackForm open={open} onClose={handleClose} onSubmit={handleTrack} track={editedTrack}/>
         </>
     )
 }

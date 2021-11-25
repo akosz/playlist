@@ -10,29 +10,24 @@ import { examplePlaylists } from '../../domain/playlist';
 import { exampleTracks } from '../../domain/track'
 import { PlaylistsContext } from '../state/PlaylistsService';
 import { useParams } from 'react-router';
+import { TracksContext } from '../state/TracksService';
 
 export function Playlist() {
-    console.log(useParams())
-    /*const [selectedPlaylistId, setSelectedPlaylistId] = useState('1');
-    const [selectedTackId, setSelectedTrackId] = useState('1');*/
 
     const {playlistId: selectedPlaylistId , trackId: selectedTackId} = useParams()
 
     const { playlist, addNewPlaylist } = useContext(PlaylistsContext)
+    const {tracks} = useContext(TracksContext)
 
     const playlistsWithTracks = playlist.map(pl => ({
-        pl,
-        tracks: pl.tracks.map(trackId => exampleTracks.find(track => track.id == trackId))
+        ...pl,
+        tracks: pl.tracks.map(trackId => tracks.find(track => track.id == trackId))
     }))
 
-    const playList = playlistsWithTracks.find(play => play.pl.id == selectedPlaylistId)
-    //console.log(playList)
-    const track = exampleTracks.find(tr => tr.id == selectedTackId)
+    const playList = playlistsWithTracks.find(play => play.id == selectedPlaylistId)
 
-/*function handlePlaylistChange(id) {
-    setSelectedPlaylistId(id)
-    setSelectedTrackId(null)
-}*/
+    const track = tracks.find(tr => tr.id == selectedTackId)
+
 
 return (
     <div className="ui container">
