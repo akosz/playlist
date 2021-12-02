@@ -1,45 +1,72 @@
-import React, { useContext, useState } from 'react'
-import { Dropdown } from 'semantic-ui-react'
-import { PlaylistsContext } from '../state/PlaylistsService'
+import React, { useContext, useState } from "react";
+import { useSelector } from "react-redux";
+import { Dropdown } from "semantic-ui-react";
+import { getPlaylists } from "../state/playlists/selectors";
+import { PlaylistsContext } from "../state/PlaylistsService";
 
-export function Track({track, onEdit, onDelete}) {
-    const [open, setOpen] = useState(false)
+export function Track({ track, onEdit, onDelete }) {
+  const [open, setOpen] = useState(false);
 
-    const {playlist, addTrackToPlaylist} = useContext(PlaylistsContext)
+  const playlist = useSelector(getPlaylists);
 
-    const handleOpen = () => setOpen(true)
+  const { /*playlist,*/ addTrackToPlaylist } = useContext(PlaylistsContext);
 
-    const handleClose = e => {
-        if(e && e.target && e.target.matches('.dropdown *:not(.icon)')) return
-        setOpen(false)
-    }
+  const handleOpen = () => setOpen(true);
 
-    const handleClick = (playlistId, trackId) => {
-        addTrackToPlaylist(playlistId, trackId)
-        handleClose()
-    }
+  const handleClose = (e) => {
+    if (e && e.target && e.target.matches(".dropdown *:not(.icon)")) return;
+    setOpen(false);
+  };
 
-    return (
-        <tr>
-            <td><i className="user icon"></i> {track.artist}</td>
-            <td><i className="music icon"></i> {track.title}</td>
-            <td className="right aligned collapsing">
-                <Dropdown onOpen={handleOpen} onClose={handleClose} open={open} icon="plus" className="ui icon top right pointing dropdown button">
-                    <Dropdown.Menu className="menu">
-                        <div className="header">Add to playlist</div>
-                        <div className="ui search icon input">
-                            <i className="search icon"></i>
-                            <input type="text" name="search" placeholder="Search playlists..." />
-                        </div>
-                        {playlist.map(pl => 
-                            <div onClick={() => handleClick(pl.id, track.id)} key={pl.id} className="item">{pl.title}</div>
-                        )}
-                        
-                    </Dropdown.Menu>
-                </Dropdown>
-                <button onClick={onEdit} className="ui icon button"><i className="edit icon"></i></button>
-                <button onClick={onDelete} className="ui icon button red"><i className="trash icon"></i></button>
-            </td>
-        </tr>
-    )
+  const handleClick = (playlistId, trackId) => {
+    addTrackToPlaylist(playlistId, trackId);
+    handleClose();
+  };
+
+  return (
+    <tr>
+      <td>
+        <i className="user icon"></i> {track.artist}
+      </td>
+      <td>
+        <i className="music icon"></i> {track.title}
+      </td>
+      <td className="right aligned collapsing">
+        <Dropdown
+          onOpen={handleOpen}
+          onClose={handleClose}
+          open={open}
+          icon="plus"
+          className="ui icon top right pointing dropdown button"
+        >
+          <Dropdown.Menu className="menu">
+            <div className="header">Add to playlist</div>
+            <div className="ui search icon input">
+              <i className="search icon"></i>
+              <input
+                type="text"
+                name="search"
+                placeholder="Search playlists..."
+              />
+            </div>
+            {playlist.map((pl) => (
+              <div
+                onClick={() => handleClick(pl.id, track.id)}
+                key={pl.id}
+                className="item"
+              >
+                {pl.title}
+              </div>
+            ))}
+          </Dropdown.Menu>
+        </Dropdown>
+        <button onClick={onEdit} className="ui icon button">
+          <i className="edit icon"></i>
+        </button>
+        <button onClick={onDelete} className="ui icon button red">
+          <i className="trash icon"></i>
+        </button>
+      </td>
+    </tr>
+  );
 }
