@@ -1,15 +1,15 @@
-import React, { useContext, useState } from "react";
-import { useSelector } from "react-redux";
+import React, { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Dropdown } from "semantic-ui-react";
+import { addTrackToPlaylist } from "../state/playlists/actions";
 import { getPlaylists } from "../state/playlists/selectors";
-import { PlaylistsContext } from "../state/PlaylistsService";
 
 export function Track({ track, onEdit, onDelete }) {
   const [open, setOpen] = useState(false);
 
-  const playlist = useSelector(getPlaylists);
+  const dispatch = useDispatch();
 
-  const { /*playlist,*/ addTrackToPlaylist } = useContext(PlaylistsContext);
+  const playlist = useSelector(getPlaylists);
 
   const handleOpen = () => setOpen(true);
 
@@ -19,7 +19,8 @@ export function Track({ track, onEdit, onDelete }) {
   };
 
   const handleClick = (playlistId, trackId) => {
-    addTrackToPlaylist(playlistId, trackId);
+    //addTrackToPlaylist(playlistId, trackId);
+    dispatch(addTrackToPlaylist(playlistId, trackId));
     handleClose();
   };
 
