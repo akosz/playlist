@@ -55,3 +55,5 @@ export const addTrackToPlaylist =
     const updatedPlaylist = await playlistsStorage.update(modifiedPlaylist);
     dispatch(updatedPlaylist(updatedPlaylist));
   };
+
+  export const deleteTrackFromAllPlaylist = ()
