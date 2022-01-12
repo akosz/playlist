@@ -6,10 +6,9 @@ import { getPlaylists } from "../state/playlists/selectors";
 
 export function Track({ track, onEdit, onDelete }) {
   const [open, setOpen] = useState(false);
+  const playlist = useSelector(getPlaylists);
 
   const dispatch = useDispatch();
-
-  const playlist = useSelector(getPlaylists);
 
   const handleOpen = () => setOpen(true);
 

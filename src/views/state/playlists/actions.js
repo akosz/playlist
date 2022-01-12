@@ -12,9 +12,9 @@ export const setPlaylists = (playlists) => ({
   payload: playlists,
 });
 
-export const addPlaylistToStore = (title) => ({
+export const addPlaylistToStore = (playlist) => ({
   type: ADD_PLAYLIST,
-  payload: { id: Date.now().toString(), title, tracks: [] },
+  payload: playlist,
 });
 
 export const updatePlaylist = (playlist) => ({
@@ -30,6 +30,7 @@ export const addTrackToPlaylistToStore = (playlistId, trackId) => ({
 //Async
 export const fetchPlaylists = () => async (dispatch) => {
   const playlists = await playlistsStorage.getAll();
+  console.log(playlists);
   dispatch(setPlaylists(playlists));
 };
 
@@ -53,7 +54,22 @@ export const addTrackToPlaylist =
     };
 
     const updatedPlaylist = await playlistsStorage.update(modifiedPlaylist);
-    dispatch(updatedPlaylist(updatedPlaylist));
+    dispatch(updatePlaylist(updatedPlaylist));
   };
 
-  export const deleteTrackFromAllPlaylist = ()
+export const deleteTrackFromAllPlaylist =
+  (track) => async (dispatch, getState) => {
+    const playlists = getPlaylists(getState());
+
+    for (const playlist of playlists) {
+      if (playlist.tracks.includes(track.id)) {
+        const modifiedPlaylist = {
+          ...playlist,
+          tracks: playlist.tracks.filter((id) => id !== track.id),
+        };
+
+        const updatedPlaylist = await playlistsStorage.update(modifiedPlaylist);
+        dispatch(updatePlaylist(updatedPlaylist));
+      }
+    }
+  };

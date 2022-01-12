@@ -1,8 +1,7 @@
 import { examplePlaylists } from "../../../domain/playlist";
-import { DELETE_TRACK } from "../tracks/actions";
-import { ADD_PLAYLIST, ADD_TRACK_TO_PLAYLIST, SET_PLAYLISTS } from "./actions";
+import { ADD_PLAYLIST, SET_PLAYLISTS, UPDATE_PLAYLIST } from "./actions";
 
-const initialState = examplePlaylists;
+const initialState = [];
 
 export const playlistsReducer = (state = initialState, action) => {
   const { type, payload } = action;
@@ -16,7 +15,14 @@ export const playlistsReducer = (state = initialState, action) => {
     return [...playlists, playlist];
   }
 
-  if (type === ADD_TRACK_TO_PLAYLIST) {
+  if (type === UPDATE_PLAYLIST) {
+    const playlists = state;
+    const playlist = payload;
+
+    return playlists.map((pl) => (pl.id !== playlist.id ? pl : playlist));
+  }
+
+  /*if (type === ADD_TRACK_TO_PLAYLIST) {
     const playlists = state;
     const { playlistId, trackId } = payload;
 
@@ -38,9 +44,9 @@ export const playlistsReducer = (state = initialState, action) => {
 
     return playlists.map((playlist) => ({
       ...playlist,
-      tracks: playlist.filter((id) => id !== track.id),
+      tracks: playlist.tracks.filter((id) => id !== track.id),
     }));
-  }
+  }*/
 
   return state;
 };

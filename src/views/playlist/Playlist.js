@@ -5,20 +5,24 @@ import { TrackDetails } from "./TrackDetails";
 import { TrackList } from "./TrackList";
 import { PlaylistsContext } from "../state/PlaylistsService";
 import { useParams } from "react-router";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { getPlaylistsWithTracks } from "../state/selectors";
+import { addPlaylist } from "../state/playlists/actions";
 
 export function Playlist() {
+  const dispatch = useDispatch();
   const { playlistId: selectedPlaylistId, trackId: selectedTackId } =
     useParams();
-
-  const { /*playlist,*/ addNewPlaylist } = useContext(PlaylistsContext);
 
   const playlistsWithTracks = useSelector(getPlaylistsWithTracks);
 
   const playList = playlistsWithTracks.find(
     (play) => play.id === selectedPlaylistId
   );
+
+  const handleNewPlaylist = (title) => {
+    dispatch(addPlaylist(title));
+  };
 
   const track =
     playList && playList.tracks.find((tr) => tr.id === selectedTackId);
@@ -30,7 +34,7 @@ export function Playlist() {
         <div className="ui six wide column">
           <h3>Playlists</h3>
           {/*PlaylistForm komponens felel az új playlist-et felvevő form kezelésért. A komponensnek átadásra került  */}
-          <PlaylistForm onSubmit={addNewPlaylist} />
+          <PlaylistForm onSubmit={handleNewPlaylist} />
           {/*PlaylistList komponens felel a playlistek-kel kapcsolatos műveletekre és megjelenítésekre. A komponensnek átadásra került a playlisteket tartalmazó objektum (playlist), az akutálisan kiválasztott playlist id-ja (selectedPlaylistId), továbbá még átadásra került az a függvény, aminek segítségével a kiválasztás inerakció kezelésre kerül (onSelect). */}
           <PlaylistList
             playlist={playlistsWithTracks}
