@@ -1,4 +1,5 @@
 import { playlistsStorage } from "../../../api/PlaylistsStorage";
+import { playlistsApi } from "../../../api/rest";
 import { getPlaylists } from "./selectors";
 
 export const SET_PLAYLISTS = "SET_PLAYLISTS";
@@ -35,7 +36,7 @@ export const fetchPlaylists = () => async (dispatch) => {
 };
 
 export const addPlaylist = (title) => async (dispatch) => {
-  const newPlaylist = await playlistsStorage.create({ title, tracks: [] });
+  const newPlaylist = await playlistsApi.create({ title, tracks: [] });
   dispatch(addPlaylistToStore(newPlaylist));
 };
 
