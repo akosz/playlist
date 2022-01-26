@@ -1,4 +1,3 @@
-import { playlistsStorage } from "../../../api/PlaylistsStorage";
 import { playlistsApi } from "../../../api/rest";
 import { getPlaylists } from "./selectors";
 
@@ -30,7 +29,7 @@ export const addTrackToPlaylistToStore = (playlistId, trackId) => ({
 
 //Async
 export const fetchPlaylists = () => async (dispatch) => {
-  const playlists = await playlistsStorage.getAll();
+  const playlists = await playlistsApi.getAll();
   console.log(playlists);
   dispatch(setPlaylists(playlists));
 };
@@ -54,7 +53,7 @@ export const addTrackToPlaylist =
       tracks: playlist.tracks.concat(trackId),
     };
 
-    const updatedPlaylist = await playlistsStorage.update(modifiedPlaylist);
+    const updatedPlaylist = await playlistsApi.update(modifiedPlaylist);
     dispatch(updatePlaylist(updatedPlaylist));
   };
 
@@ -69,7 +68,7 @@ export const deleteTrackFromAllPlaylist =
           tracks: playlist.tracks.filter((id) => id !== track.id),
         };
 
-        const updatedPlaylist = await playlistsStorage.update(modifiedPlaylist);
+        const updatedPlaylist = await playlistsApi.update(modifiedPlaylist);
         dispatch(updatePlaylist(updatedPlaylist));
       }
     }
