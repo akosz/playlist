@@ -80,3 +80,31 @@ const convertTrackIds = track => {
 }
 
 export const tracksApi = new RestApi('tracks', convertTrackIds)
+
+
+class AuthApi {
+  async login(username, password){
+    const authData = {
+      email: username,
+      password,
+      strategy: 'local'
+    }
+
+    const response = await request('authentication', {
+      method: 'POST',
+      body: JSON.stringify(authData)
+    })
+
+    return response
+  }
+
+  logout(){
+    //TODO
+  }
+
+  getToken(){
+    //TODO
+  }
+}
+
+export const authApi = new AuthApi();
