@@ -11,8 +11,12 @@ export function LoginForm(){
 
     const handleSubmit = async e => {
         e.preventDefault()
-        setError(null)
-        await dispatch(login(username, password))
+        try {
+            setError(null)
+            await dispatch(login(username, password))
+        } catch (error) {
+            console.log(error);
+        }
     }
 
     return(

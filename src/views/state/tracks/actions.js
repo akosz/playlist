@@ -1,4 +1,5 @@
 import { tracksApi } from "../../../api/rest";
+import { addToken } from "../auth/actions";
 import { deleteTrackFromAllPlaylist } from "../playlists/actions";
 
 export const ADD_TRACK = "ADD_TRACK";
@@ -29,23 +30,23 @@ export const deleteTrackFromStore = (track) => ({
 });
 
 //Async
-export const fetchTracks = () => async (dispatch) => {
-  const tracks = await tracksApi.getAll();
+export const fetchTracks = () => addToken(async (dispatch, getState , _, token) => {
+  const tracks = await tracksApi.getAll(token);
   dispatch(setTracks(tracks));
-};
+});
 
-export const addTrack = (track) => async (dispatch) => {
-  const newTrack = await tracksApi.create(track);
+export const addTrack = (track) => addToken(async (dispatch, getState, _, token) => {
+  const newTrack = await tracksApi.create(track, token);
   dispatch(addTrackToStore(newTrack));
-};
+});
 
-export const updateTrack = (track) => async (dispatch) => {
-  const updatedTrack = await tracksApi.update(track);
+export const updateTrack = (track) => addToken(async (dispatch, getState, _, token) => {
+  const updatedTrack = await tracksApi.update(track, token);
   dispatch(updateTrackInStore(updatedTrack));
-};
+});
 
-export const deleteTrack = (track) => async (dispatch) => {
-  await tracksApi.delete(track.id);
+export const deleteTrack = (track) => addToken(async (dispatch, getState, _, token) => {
+  await tracksApi.delete(track.id, token);
   dispatch(deleteTrackFromStore(track));
   dispatch(deleteTrackFromAllPlaylist(track));
-};
+});

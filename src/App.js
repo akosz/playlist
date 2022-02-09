@@ -1,21 +1,32 @@
 import React, { useEffect } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import { Home } from "./views/home/Home";
 import { Layout } from "./views/layout/Layout";
 import { NotFound } from "./views/notFound/NotFound";
 
 import { Playlist } from "./views/playlist/Playlist";
+import { restoreUser } from "./views/state/auth/actions";
+import { getIsLoggedIn } from "./views/state/auth/selectors";
 import { fetchPlaylists } from "./views/state/playlists/actions";
 import { fetchTracks } from "./views/state/tracks/actions";
 import { Tracks } from "./views/track/Tracks";
 
 export function App() {
   const dispatch = useDispatch();
+
+  const isLoggedIn = useSelector(getIsLoggedIn)
+
   useEffect(() => {
-    dispatch(fetchPlaylists());
-    dispatch(fetchTracks());
-  }, [dispatch]);
+    if(isLoggedIn){
+      dispatch(fetchPlaylists());
+      dispatch(fetchTracks());
+    }
+  }, [isLoggedIn, dispatch]);
+
+  useEffect(() => {
+    dispatch(restoreUser())
+  }, [dispatch])
 
   return (
     <Router>

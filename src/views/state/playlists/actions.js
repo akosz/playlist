@@ -1,4 +1,5 @@
 import { playlistsApi } from "../../../api/rest";
+import { addToken, addUserId } from "../auth/actions";
 import { getPlaylists } from "./selectors";
 
 export const SET_PLAYLISTS = "SET_PLAYLISTS";
@@ -28,19 +29,19 @@ export const addTrackToPlaylistToStore = (playlistId, trackId) => ({
 });
 
 //Async
-export const fetchPlaylists = () => async (dispatch) => {
-  const playlists = await playlistsApi.getAll();
+export const fetchPlaylists = () => addToken(addUserId(async (dispatch, getState, _, token, userId) => {
+  const playlists = await playlistsApi.getAll(token, userId);
   console.log(playlists);
   dispatch(setPlaylists(playlists));
-};
+}));
 
-export const addPlaylist = (title) => async (dispatch) => {
-  const newPlaylist = await playlistsApi.create({ title, tracks: [] });
+export const addPlaylist = (title) => addToken(async (dispatch, getState, _, token) => {
+  const newPlaylist = await playlistsApi.create({ title, tracks: [] }, token);
   dispatch(addPlaylistToStore(newPlaylist));
-};
+});
 
 export const addTrackToPlaylist =
-  (playlistId, trackId) => async (dispatch, getState) => {
+  (playlistId, trackId) => addToken(async (dispatch, getState, _, token) => {
     const playlists = getPlaylists(getState());
     const playlist = playlists.find((pl) => pl.id === playlistId);
 
@@ -53,12 +54,12 @@ export const addTrackToPlaylist =
       tracks: playlist.tracks.concat(trackId),
     };
 
-    const updatedPlaylist = await playlistsApi.update(modifiedPlaylist);
+    const updatedPlaylist = await playlistsApi.update(modifiedPlaylist, token);
     dispatch(updatePlaylist(updatedPlaylist));
-  };
+  });
 
 export const deleteTrackFromAllPlaylist =
-  (track) => async (dispatch, getState) => {
+  (track) => addToken(async (dispatch, getState, _, token) => {
     const playlists = getPlaylists(getState());
 
     for (const playlist of playlists) {
@@ -68,8 +69,8 @@ export const deleteTrackFromAllPlaylist =
           tracks: playlist.tracks.filter((id) => id !== track.id),
         };
 
-        const updatedPlaylist = await playlistsApi.update(modifiedPlaylist);
+        const updatedPlaylist = await playlistsApi.update(modifiedPlaylist, token);
         dispatch(updatePlaylist(updatedPlaylist));
       }
     }
-  };
+  });

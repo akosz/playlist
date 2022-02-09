@@ -1,9 +1,11 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link, NavLink } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
+import { Link, NavLink, Redirect } from 'react-router-dom';
 import { Menu as MenuComp } from "semantic-ui-react";
 
 import logo from '../../assets/logo.png'
+import { logout } from '../state/auth/actions';
 import { getIsLoggedIn, getUser } from '../state/auth/selectors';
 
 export function Menu(){
@@ -12,8 +14,10 @@ export function Menu(){
 
     const dispatch = useDispatch()
 
+
     const handleClick = (e) => {
-        //dispatch(logout())
+        e.preventDefault()
+        dispatch(logout())
     }
 
     return(
@@ -25,7 +29,7 @@ export function Menu(){
             <NavLink className="item" to="/search"><i className="search icon"></i> Search</NavLink>
             <MenuComp.Menu position='right'>
                 {isLoggedIn ?
-                    <a onClick={handleClick} href="#logout" className='item'>
+                    <a onClick={handleClick} href="#" className='item'>
                         Log out ({user.email})
                     </a>
                     :

@@ -1,11 +1,19 @@
 const TOKEN = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwiYXVkIjoiaHR0cHM6Ly95b3VyZG9tYWluLmNvbSIsImlzcyI6ImZlYXRoZXJzIn0.RdTDcCUiM6AAgNMZGzuZzSWosS14dVO2JUQjdbAwfMc';
 const BASE_URL = "http://localhost:3030";
 
-const request = async (path = '', options = {}) => {
+const request = async (path = '', options = {}, token, userId) => {
   const headers = {
-    Authorization: `Bearer ${TOKEN}`,
+    //Authorization: `Bearer ${TOKEN}`,
     'Content-Type': 'application/json',
     ...options.headers
+  }
+
+  if(token){
+    headers.Authorization = `Bearer ${TOKEN}`;
+  }
+
+  if(userId){
+    path += `?userId=${userId}`
   }
 
   const response = await fetch(`${BASE_URL}/${path}`, {
@@ -22,11 +30,11 @@ class RestApi {
     this.path = path
     this.convertFn = convertFn
   }
-  async create(obj) {
+  async create(obj, token) {
     const playlist = await request(this.path, {
       method: 'POST',
       body: JSON.stringify(obj)
-    })
+    }, token)
     return this.convertFn(playlist);
   }
   async fill(obj) {
@@ -36,28 +44,28 @@ class RestApi {
     );
     return newObj;
   }
-  async getAll() {
-    const items = await request(this.path)
+  async getAll(token, userId) {
+    const items = await request(this.path, {}, token, userId)
 
     const playlists = items.data
     return playlists.map(this.convertFn)
   }
 
-  async update(obj) {
+  async update(obj, token) {
     if (!obj.id) return;
 
     const playlist = await request(`${this.path}/${obj.id}`, {
       method: 'PUT',
       body: JSON.stringify(obj)
-    })
+    }, token)
 
     return this.convertFn(playlist);
   }
 
-  async delete(id) {
+  async delete(id, token) {
     return await request(`${this.path}/${id}`, {
       method: 'DELETE'
-    })
+    }, token)
   }
 }
 
@@ -94,16 +102,20 @@ class AuthApi {
       method: 'POST',
       body: JSON.stringify(authData)
     })
-
+    window.sessionStorage.setItem('api-token', response.accessToken)
     return response
   }
 
   logout(){
-    //TODO
+    window.sessionStorage.removeItem('api-token')
   }
 
   getToken(){
-    //TODO
+    return window.sessionStorage.getItem('api-token')
+  }
+
+  async getuserById(userId, token){
+    return await request(`/urses/${userId}`, {}, token)
   }
 }
 
