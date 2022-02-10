@@ -30,7 +30,6 @@ export const logout = () => dispatch => {
 
 export const restoreUser = () => async dispatch => {
     const token = authApi.getToken()
-    console.log(token);
     if(token){
         const data = JSON.parse(atob(token.split('.')[1]))
         const userId = data.sub

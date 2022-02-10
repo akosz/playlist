@@ -1,5 +1,6 @@
 import { useState } from "react"
 import { useDispatch } from "react-redux"
+import { Message } from "semantic-ui-react"
 import { login } from "../state/auth/actions"
 
 
@@ -15,7 +16,7 @@ export function LoginForm(){
             setError(null)
             await dispatch(login(username, password))
         } catch (error) {
-            console.log(error);
+            setError(error.message)
         }
     }
 
@@ -36,6 +37,7 @@ export function LoginForm(){
                 </div>
             </div>
             <button type="submit" className="ui blue submit button">Login</button>
+            {error && <Message negative>{error}</Message>}
         </form>
     )
 }

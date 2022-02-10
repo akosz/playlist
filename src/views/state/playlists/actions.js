@@ -31,7 +31,6 @@ export const addTrackToPlaylistToStore = (playlistId, trackId) => ({
 //Async
 export const fetchPlaylists = () => addToken(addUserId(async (dispatch, getState, _, token, userId) => {
   const playlists = await playlistsApi.getAll(token, userId);
-  console.log(playlists);
   dispatch(setPlaylists(playlists));
 }));
 

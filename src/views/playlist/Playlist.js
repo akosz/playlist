@@ -15,6 +15,7 @@ export function Playlist() {
     useParams();
 
   const playlistsWithTracks = useSelector(getPlaylistsWithTracks);
+  console.log(playlistsWithTracks);
 
   const playList = playlistsWithTracks.find(
     (play) => play.id === selectedPlaylistId

@@ -1,15 +1,13 @@
-const TOKEN = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwiYXVkIjoiaHR0cHM6Ly95b3VyZG9tYWluLmNvbSIsImlzcyI6ImZlYXRoZXJzIn0.RdTDcCUiM6AAgNMZGzuZzSWosS14dVO2JUQjdbAwfMc';
 const BASE_URL = "http://localhost:3030";
 
 const request = async (path = '', options = {}, token, userId) => {
   const headers = {
-    //Authorization: `Bearer ${TOKEN}`,
     'Content-Type': 'application/json',
     ...options.headers
   }
 
   if(token){
-    headers.Authorization = `Bearer ${TOKEN}`;
+    headers.Authorization = `Bearer ${token}`;
   }
 
   if(userId){
@@ -115,7 +113,7 @@ class AuthApi {
   }
 
   async getuserById(userId, token){
-    return await request(`/urses/${userId}`, {}, token)
+    return await request(`users/${userId}`, {}, token)
   }
 }
 
